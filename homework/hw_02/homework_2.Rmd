@@ -1,0 +1,84 @@
+---
+title: "hw_02"
+author: "justyn koenig"
+date: "10/4/2021"
+output: html_document
+output : pdf_document  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Question 1 
+
+```{r}
+mtcars[mtcars$cyl < 6, ]
+
+mtcars[1:3, ]
+(cannot have both a positive and negative number, only 0 can be used with negatives)
+
+mtcars[mtcars$cyl == 8,]
+
+mtcars[mtcars$cyl %% 4 == 0 | mtcars$cyl == 6,]
+
+```
+
+
+# Question 2
+
+```{r}
+The code generates five missing values, because x represents 5 different numbers (1, 2, 3, 4, 5). This means that when x is assigned NA, the output will be NA for (1, 2, 3, 4, 5) which results in 5 different missing values (NA, NA, NA, Na, NA). 
+
+```
+
+
+# Question 3 
+
+```{r}
+mtcars[1:15] returns an error because there is no comma then space after 15.There is a undefined columns being selected. You need to write the code as mtcars[1:15, ] because you code the 1D index for each dimension and SEPERATE them by a comma.This identifies which columns are being selected. 
+
+```
+
+
+# Question 4
+
+```{r}
+x[is.na(x)] = 0 codes for any value being listed /associated with NA to be 0. IN other words, when NA is written, 0 is the output. The nrom = 3 gives the output containing the number of rows that are present in the data frame. since NA=x, and the number of NA is 3, we should get an output of NA, Na, NA being 0, 0, 0. So this code would generate 3 rows for NA , NA, NA, and have them all equal to 0. 
+
+```
+
+
+# Question 5 
+
+```{r}
+mpg_2 <- 
+    ifelse(mtcars$mpg  < 16, "Low",
+           ifelse(mtcars$mpg < 21, "Low_Intermediate",
+                  ifelse(mtcars$mpg < 26, "High_Intermediate", "High" )))
+  mpg_2 
+  
+  mtcars$mpg_2 = mpg_2
+  
+```
+
