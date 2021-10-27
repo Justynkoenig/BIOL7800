@@ -1,0 +1,66 @@
+---
+title: "hw 4 add"
+author: "justyn koenig"
+date: "10/24/2021"
+output: html_document
+        
+---
+#Question 1
+
+```{r}
+if(!require("tidyverse")) install.packages("tidyverse")
+if(!require("rvest")) install.packages("rvest")
+library(dplyr)
+library(rvest)
+html <- read_html("https://introdatasci.dlilab.com/schedule_materials/")
+x = html %>% 
+  html_table()
+x
+```
+
+
+# Question 2 
+
+
+```{r}
+
+Datasci <- x[[1]]
+
+Datasci %>% 
+  separate(Date, into = c("Month", "Day"), sep = ' ') %>% 
+  select(Month, Day)
+
+Datasci <- separate(Datasci, Date, into = c("Month", "Day"), sep = " ", remove = FALSE)
+Datasci
+```
+
+Code from lines 30 to 38 separated the date column into Month and Day, but not on the actual data table. To get the separation into month and day on the actual data table I used code on line 40 to generate the new columns. 
+
+# Question 3 
+
+```{r}
+Datasci 
+new_lec = Datasci %>% 
+  group_by(Month) %>% 
+  dplyr::summarise(lectures = n())
+new_lec
+arrange(new_lec, desc(lectures))
+```
+
+
+# Question 4
+
+```{r}
+
+strsplit(Datasci$Topic, " ", fixed = TRUE)
+grep(" ", Datasci$Topic)
+grep(", ", Datasci$Topic)
+unlist(Datasci$Topic)
+words <- unlist(Datasci$Topic)
+words
+freqtable <- sort(table(unlist(strsplit(Datasci$Topic, " "))), decreasing = T)
+top5 <- paste0("(", paste0("\\b", names(freqtable)[1:5], "\\b", collapse = ""), ")", collapse = "|")
+freqtable[1:5]
+
+```
+
