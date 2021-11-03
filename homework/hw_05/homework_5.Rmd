@@ -1,0 +1,88 @@
+---
+title: "hw_05"
+author: "justyn koenig"
+date: "10/31/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Question 1 
+
+```{r}
+if(!require("neonDivData")) install.packages("neonDivData")
+data_plant
+library(dplyr)
+
+data_plant2 = mutate(data_plant, genus = gsub("([A-Za-z]+) .*", "\\1", taxon_name))
+data_plant2
+sample(unique(data_plant2$genus), 100)
+
+```
+
+# Question 2
+
+```{r}
+data_plant2$taxon_name2 = data_plant2$taxon_name
+data_plant2$taxon_name2 <- gsub("([A-Za-z]+ [A-Za-z.-]+).*", "\\1", data_plant2$taxon_name2)
+data_plant2$taxon_name2
+sample(unique(data_plant2$taxon_name2), 100)
+
+```
+
+# Question 3
+
+```{r}
+library(dplyr)
+n_1 <- data_plant2 %>%
+  group_by(siteID) %>%
+summarise(richness_1m2 = n_distinct(taxon_name2, sample_area_m2 == "1"))
+n_1
+```
+
+```{r}
+n_10 <- data_plant2 %>%
+  group_by(siteID) %>%
+summarise(richness_10m2 = n_distinct(taxon_name2, sample_area_m2 %in% c("1", "10")))
+n_10
+```
+```{r}
+n_100 <- data_plant2 %>%
+  group_by(siteID) %>%
+summarise(richness_100m2 = n_distinct(taxon_name2, sample_area_m2 %in% c("1", "10", "100")))
+n_100
+```
+
+```{r}
+richness_100m2 = dplyr::left_join(n_1, n_10)
+richness_100m2
+n_all = dplyr::left_join(richness_100m2, n_100)
+n_all
+
+
+```
+
+# Question 4
+
+```{r}
+library(tidyr)
+n_all_long <- n_all %>%
+  pivot_longer(cols = -c(siteID),
+               names_to = "spatial_scale", "richness",
+               values_to = "richness")
+               
+n_all_long
+```
+
+# Question 5 
+
+```{r}
+library(ggplot2)
+data(n_all_long)
+ggplot(data = n_all_long, aes(x = spatial_scale, y = richness, group = siteID, colour = siteID)) + geom_point() + geom_line()
+  
+
+
+```
+
+
