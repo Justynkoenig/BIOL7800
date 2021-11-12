@@ -1,0 +1,210 @@
+---
+title: "hw_06"
+author: "justyn koenig"
+date: "11/9/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Question 1
+
+#data set created for plant height (x) and grain yield (y) of rice. There are eight varieties of rice in this data set.
+
+# plant height is the predictor variable and grain yield is the response variable in the simple linear regression. 
+
+# First the simple linear regression model is fit. Part A:
+# The model summary above allows us to note that the fitted regression equation would be Y = 10.137455 + (-0.037175)(X).
+# The two numbers in the equation above were found under the estimate column within the coefficients section on the printed model summary. I believe that this equation is showing that the larger the grain yield, the smaller the height of the plant would be. This would make sense due to the plant putting more energy into forming grain, rather than growth in height. 
+
+#The slope of the equation is -0.037175. Estimates : B1 = 10.137455 and B0 = -0.037175.
+# the correlation between x and y is low (-0.868707)
+```{r}
+
+Plantdata = data.frame(Plant_height = c(110.5, 105.4, 118.1, 104.5, 93.6, 84.1, 77.8, 75.6), Grain_yield = c(5.755, 5.939, 6.010, 6.545, 6.730, 6.750, 6.899, 7.862))
+Plantdata
+
+model = lm(Plantdata$Grain_yield~Plantdata$Plant_height)
+summary(model)
+
+Plantdata = data.frame(Plant_height = c(110.5, 105.4, 118.1, 104.5, 93.6, 84.1, 77.8, 75.6), Grain_yield = c(5.755, 5.939, 6.010, 6.545, 6.730, 6.750, 6.899, 7.862))
+plot(Plantdata$Grain_yield~Plantdata$Plant_height, xlab = "Grain yield", ylab = "Plant height")
+plot
+
+cor(Plantdata$Plant_height, Plantdata$Grain_yield)
+
+```
+# Intercept = 10.13746
+
+```{r}
+fit_Plantdata = lm(Plantdata$Grain_yield~Plantdata$Plant_height, data = Plantdata)
+summary(fit_Plantdata)
+coef(fit_Plantdata)[1]
+
+```
+
+# Plant height = -0.03717469
+
+```{r}
+coef(fit_Plantdata)["Plantdata$Plant_height"]
+
+```
+
+
+# B 
+#The pvalue is less than 0.05 so the null hypothesis is rejected and the two variances are not equal. F value = 18.455.
+
+```{r}
+
+anova(fit_Plantdata)
+
+```
+# B 
+# Reject the null because p value is less than 0.05. Get the same p value for T test as F test of 0.005. There is evidence of a strong relationship between plant height and grain yield. F value = 18.455.
+
+```{r}
+
+summary(fit_Plantdata)
+
+```
+
+# c.
+
+```{r}
+ 
+plot(Plantdata$Grain_yield~Plantdata$Plant_height, xlab = "Grain yield", ylab = "Plant height")
+abline(fit_Plantdata)
+```
+
+# calculate the 95 % CI 
+# t value = -2.446912
+
+#b0 + t_-2.446912 * se_b0
+#-0.037175 + -2.446912 * 0.008653 = #-0.0583481295
+#-0.037175 + t(8-2, 0.05/2) * 0.008653 
+
+# = upper level CI
+
+#b0 - t_-2.446912 * se_b0
+#-0.037175 - -2.446912 * 0.008653 = -0.0160018705
+#-0.037175 - t_(8-2, 0.05/2) * 0.008653
+
+# the 95% CI shows that the range of values lies between -0.05834895 and  -0.01600043. 
+
+```{r}
+
+b0 = -0.037175
+se_b0 = 0.008653
+qt(0.05/2, 8-2)
+
+
+Plantdata
+fit_Plantdata = lm(Grain_yield~Plant_height, data = Plantdata)
+confint(fit_Plantdata)
+```
+# Below is the fitted regression line
+#Y = 10.137455 + (-0.037175)(X)
+
+
+# Printed below are the residuals.
+
+```{r}
+# d. 
+
+plot(fit_Plantdata)
+
+summary(fit_Plantdata)
+
+resid(fit_Plantdata)
+ 
+
+```
+# e. 
+# The estimate od the error variance (MSE) is 0.1049614
+
+```{r}
+
+mean(summary(fit_Plantdata$residuals^2))
+
+```
+# f. 
+
+#Confidence interval used to estimate the expected yield of a rice variety. 
+
+```{r}
+
+predict(fit_Plantdata, newdataplant = Plantdata(x = 100), interval = "confidence")
+```
+
+# g. 
+
+# Prediction interval used to predict the yield of a new rice variety.
+# both g and g have the same fit values, the lower levels of the 95% CI are smaller for g and larger for f , and the upper levels of the 95% CI are larger in g and smaller in f, in comparing the values of f and g. G is wider. 
+
+```{r}
+
+predict(fit_Plantdata, newdataplant = Plantdata(x = 100), interval = "prediction")
+
+```
+
+# h. 
+
+# The r squared value ( coefficient of determination) is 0.7546518. This means that 75.46% of the variation in the grain yield can be explained by the height of the rice plants. A R squared value of 1 means that the explanatory variables can be used to explain the variance observed in the response variable. A value of 0 means that the explanatory variables cannot explain the variance in the response variable. Bigger the R squared = Better the explanatory variables can be used as predictors of the repsonse variables.
+
+```{r}
+
+summary(fit_Plantdata)$r.squared
+```
+
+# Question 2 
+
+```{r}
+#
+Demodataset = data.frame(x = c(1, 2, 3, 4, 5, 6, 7, 8, 9), y = c(-2.08, -0.72, 0.28, 0.92, 1.20, 1.12, 0.68, -0.12, -1.28))
+Demodataset
+
+```
+```{r}
+
+plot(Demodataset$x, Demodataset$y, xlab = "X", ylab = "Y")
+
+```
+
+
+# a
+
+```{r}
+
+rawy = lm(Demodataset$y~Demodataset$x, data = Demodataset)
+res = resid(rawy)
+plot(rawy)
+res
+
+plot(Demodataset$y, Demodataset$x)
+
+
+```
+
+# b 
+
+```{r}
+plot(Demodataset$x, res)
+```
+
+# c
+
+```{r}
+plot(Demodataset$y, res)
+```
+
+# d
+
+```{r}
+plot(rawy$fitted.values, res)
+```
+
+# e
+
+The graph of c shows that the data increases exponentially as the res increases and the y data increases. D shows that as the data points get closer to 0 they increase and then the fitted values decrease after the data points get higher than 0. B gives a better fit, with the data points lining up better to the fitted line than does d. D has points that are mostly far away from the fitted line. 
+
+
